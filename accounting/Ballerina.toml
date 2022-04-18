@@ -1,6 +1,6 @@
 [package]
-org = "ftgo"
-name = "accounting"
+org = "ballerina_guides"
+name = "ftgo_accounting"
 version = "1.0.0"
 authors = ["WSO2"]
 distribution = "2201.0.0"
