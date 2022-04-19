@@ -1,26 +1,42 @@
+// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/sql;
 import ballerinax/mysql;
 import ballerina/http;
 import ballerina/time;
 
-configurable string USER = ?;   
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
-configurable string CONSUMER_ENDPOINT = ?;
-configurable string RESTAURANT_ENDPOINT = ?;
-configurable string MENU_ITEM_ENDPOINT = ?;
-configurable string ACCOUNTING_ENDPOINT = ?;
-configurable string DELIVERY_ENDPOINT = ?;
+configurable string user = ?;   
+configurable string password = ?;
+configurable string host = ?;
+configurable int port = ?;
+configurable string database = ?;
+configurable string consumerEndpoint = ?;
+configurable string restaurantEndpoint = ?;
+configurable string menuItemEndpoint = ?;
+configurable string accountingEndpoint = ?;
+configurable string deliveryEndpoint = ?;
 
 
-final mysql:Client dbClient = check new(host=HOST, user=USER, password=PASSWORD, port=PORT, database=DATABASE);
-final http:Client consumerEndpoint = check new(CONSUMER_ENDPOINT);
-final http:Client restaurantEndpoint = check new(RESTAURANT_ENDPOINT);
-final http:Client menuItemEndpoint = check new(MENU_ITEM_ENDPOINT);
-final http:Client accountingEndpoint = check new(ACCOUNTING_ENDPOINT);
-final http:Client deliveryEndpoint = check new(DELIVERY_ENDPOINT);
+final mysql:Client dbClient = check new(host=host, user=user, password=password, port=port, database=database);
+final http:Client consumerClient = check new(consumerEndpoint);
+final http:Client restaurantClient = check new(restaurantEndpoint);
+final http:Client menuItemClient = check new(menuItemEndpoint);
+final http:Client accountingClient = check new(accountingEndpoint);
+final http:Client deliveryClient = check new(deliveryEndpoint);
 
 
 enum OrderState {
@@ -297,7 +313,7 @@ isolated function changeOrderStatus(int orderId, OrderState newStatus) returns O
             pickUpAddress: 'order.restaurant.address,
             deliveryAddress: 'order.consumer.address
         });
-        _ = check deliveryEndpoint->post("schedule", deliveryScheduleRequest, targetType = json);
+        _ = check deliveryClient->post("schedule", deliveryScheduleRequest, targetType = json);
     }
 
     return 'order;
@@ -325,21 +341,21 @@ isolated function confirmOrder(int orderId) returns Order|error {
         orderId: orderId,
         orderAmount: orderTotal
     });
-    _ = check consumerEndpoint->post('order.consumer.id.toString() + "/validate", consumerValidateRequest, targetType = json);
+    _ = check consumerClient->post('order.consumer.id.toString() + "/validate", consumerValidateRequest, targetType = json);
 
     http:Request accountingChargeRequest = new;
     accountingChargeRequest.setJsonPayload({
         consumerId: 'order.consumer.id,
-        orderId: orderId,
+        orderId: orderId, 
         orderAmount: orderTotal
     });
-    _ = check accountingEndpoint->post("charge", accountingChargeRequest, targetType = json);
+    _ = check accountingClient->post("charge", accountingChargeRequest, targetType = json);
 
     http:Request createTicketRequest = new;
     createTicketRequest.setJsonPayload({
         orderId: orderId
     });
-    _ = check restaurantEndpoint->post('order.restaurant.id.toString() + "/ticket", createTicketRequest, targetType = json);
+    _ = check restaurantClient->post('order.restaurant.id.toString() + "/ticket", createTicketRequest, targetType = json);
 
     'order = check changeOrderStatus(orderId, APPROVED);
     return 'order;
@@ -350,9 +366,9 @@ isolated function confirmOrder(int orderId) returns Order|error {
 # + consumerId - The ID of the consumer for which the detailes are required
 # + return - The details of the customer if the retrieval was successful. An error if unsuccessful
 isolated function getConsumerDetails(int consumerId) returns Consumer|error {
-    Consumer consumer = check consumerEndpoint->get(consumerId.toString());
+    Consumer consumer = check consumerClient->get(consumerId.toString());
     return <Consumer>{
-        id: consumerId,
+        id: consumerId, 
         name: consumer.name,
         address: consumer.address
     };
@@ -363,7 +379,7 @@ isolated function getConsumerDetails(int consumerId) returns Consumer|error {
 # + restaurantId - The ID of the restaurant for which the details are required
 # + return - The details of the restaurant if the retrieval was successful. An error if unsuccessful
 isolated function getRestaurantDetails(int restaurantId) returns Restaurant|error {
-    Restaurant restaurant = check restaurantEndpoint->get(restaurantId.toString());
+    Restaurant restaurant = check restaurantClient->get(restaurantId.toString());
     return <Restaurant>{
         id: restaurantId,
         name: restaurant.name,
@@ -376,7 +392,7 @@ isolated function getRestaurantDetails(int restaurantId) returns Restaurant|erro
 # + menuItemId - The ID of the menu item for which the detailes are required
 # + return - The details of the menu item if the retrieval was successful. An error if unsuccessful
 isolated function getMenuItem(int menuItemId) returns MenuItem|error {
-    MenuItem menuItem = check menuItemEndpoint->get(menuItemId.toString());
+    MenuItem menuItem = check menuItemClient->get(menuItemId.toString());
     return <MenuItem>{
         id: menuItemId,
         name: menuItem.name,

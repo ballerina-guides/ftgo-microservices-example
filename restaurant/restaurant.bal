@@ -1,3 +1,19 @@
+// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerinax/mysql;
 import ballerina/sql;
 import ballerina/http;
@@ -34,15 +50,15 @@ type MenuItem record {|
     decimal price;
 |};
 
-configurable string USER = ?;
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
-configurable string ORDER_ENDPOINT = ?;
+configurable string user = ?;
+configurable string password = ?;
+configurable string host = ?;
+configurable int port = ?;
+configurable string database = ?;
+configurable string orderEndpoint = ?;
 
-final mysql:Client dbClient = check new(host=HOST, user=USER, password=PASSWORD, port=PORT, database="Restaurant");
-final http:Client orderEndpoint = check new(ORDER_ENDPOINT);
+final mysql:Client dbClient = check new(host=host, user=user, password=password, port=port, database="Restaurant");
+final http:Client orderClient = check new(orderEndpoint);
 
 # Creates a new restaurant. This method does not manage the creation of menus under the restaurant.
 #

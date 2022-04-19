@@ -1,5 +1,20 @@
+// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/sql;
-import ballerina/log;
 
 enum TicketState {
     ACCEPTED = "ACCEPTED",
@@ -86,8 +101,7 @@ isolated function getTicket(int id) returns Ticket|error {
 isolated function updateTicket(int id, TicketState newStatus) returns Ticket|error {
     _ = check dbClient->execute(`UPDATE Tickets SET status=${newStatus} WHERE id=${id}`);
     Ticket ticket = check getTicket(id);
-    log:printInfo(ticket.'order.id.toString() + "/updateStatus/" + newStatus.toString());
-    _ = check orderEndpoint->put(ticket.'order.id.toString() + "/updateStatus/" + newStatus.toString(), message = (), targetType = json);
+    _ = check orderClient->put(ticket.'order.id.toString() + "/updateStatus/" + newStatus.toString(), message = (), targetType = json);
     return ticket;
 }
 
@@ -96,7 +110,7 @@ isolated function updateTicket(int id, TicketState newStatus) returns Ticket|err
 # + orderId - The ID of the order for which the detailes are required
 # + return - The details of the order if the retrieval was successful. An error if unsuccessful
 isolated function getOrderDetails(int orderId) returns Order|error {
-    Order 'order = check orderEndpoint->get(orderId.toString());
+    Order 'order = check orderClient->get(orderId.toString());
     OrderItem[] orderItems = [];
 
     foreach OrderItem orderItem in 'order.orderItems {

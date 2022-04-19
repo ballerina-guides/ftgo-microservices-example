@@ -1,9 +1,9 @@
-# Microservices example in Ballerina
+# FTGO microservices example in Ballerina
 
 ## Overview
 This example is based on the [FTGO application](https://github.com/microservices-patterns/ftgo-application), a sample of an online food delivery application, connecting consumers and restaurants.
 
-![Architectute](/assets/architecture.png)
+![Architecture](/assets/architecture.png)
 
 The example has five different services
 * Consumer
@@ -73,7 +73,7 @@ This service also provides the endpoint `<consumerId>/validate` to validate an o
 ## Restaurant service
 The restaurant service represents a restaurant, with its menu, menu items and prices. A restaurant can contain multiple menus; and a menu can contain multiple menu items.
 
-The basic data structure of a restaurant and its associated data types are as follows.
+The basic data structure of a restaurant and its associated data types are as follows:
 ```ballerina
 type Restaurant record {|
     int id;
@@ -173,9 +173,8 @@ As an order is created, it is initially in the `APPROVAL_PENDING` stage.
 
 ![Order Sequence](/assets/order_sequence.png)
 
-
 ### Data storage and retrieval
-The restaurant service has it's own MySQL database for storing relevant restaurant data. Since this services accesses data from the other services it is required to configure these endpoints and make REST API calls whenever necessary.
+The order service has it's own MySQL database for storing relevant order data. Since this service accesses data from the other services it is required to configure these endpoints and make REST API calls whenever necessary.
 
 ### Running the module
 1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `order` directory.
@@ -183,7 +182,98 @@ The restaurant service has it's own MySQL database for storing relevant restaura
 3. To run the consumer service, simply navigate to the `order` directory and execute `bal run` in the terminal. 
 
 ## Accounting service
-The accounting service calulates the fee to be charged from the consumer and manages the accounting process.
+The accounting service is used to charge payments to the consumer and to view the bills generated.
+
+The basic data structure of a bill is as follows:
+```ballerina
+type Bill record {|
+    int id;
+    Consumer consumer;
+    Order 'order;
+    decimal orderAmount;
+|};
+```
+
+This service provides two endpoints:
+### 1. Charge consumer
+> Endpoint: `/charge`  
+> Method: `POST`  
+> Request payload: `ChargeRequest`  
+
+Initiates a charge on a customer using the provided details. Currently this method does not perform any meaningful functionality, as is a dummy method. 
+
+### 2. View bill
+> Endpoint: `/bill/<billId>`  
+> Method: `GET`  
+
+Retrieves the details of the bill with the provided ID. 
+
+### Data storage and retrieval
+The accounting service has it's own MySQL database for storing relevant accounting data. The two defined endpoints accesses `Order Service` and `Consumer Service` to retrieve relevant data. Since this service accesses data from the other services it is required to configure these endpoints and make REST API calls whenever necessary.
+
+### Running the module
+1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `accounting` directory.
+2. Configure the database connection properties as well as the endpoint configurations in the `Config.toml` file in the `accounting` directory. 
+3. To run the consumer service, simply navigate to the `accounting` directory and execute `bal run` in the terminal. 
 
 ## Delivery Service
 The delivery service is responsible for the management of couriers and managing the delivery of orders from the restaurant to the consumer.
+
+This service is also responsible the creation and management of couriers. The basic data structure of a courier is as follows:
+```ballerina
+type Courier record {|
+    int id;
+    string name;
+|};
+```
+
+The delivery service provides four endpoints to perform basic CRUD functionalities associated with couriers.
+
+
+In addition, to manange deliveries, the basic data structure of a delivery is as follows:
+```ballerina
+type Delivery record {|
+    int id;
+    Order 'order;
+    Courier courier;
+    string pickUpAddress;
+    time:Civil? pickUpTime;
+    string deliveryAddress;
+    time:Civil? deliveryTime;
+    DeliveryState status;
+|};
+```
+
+The delivery state can be one of the following:
+* `READY_FOR_PICKUP`
+* `PICKED_UP`
+* `DELIVERED`
+
+The delivery service provides two primary endpoints to manage deliveries.
+
+### 1. Schedule delivery
+> Endpoint: `/delivery/schedule`  
+> Method: `POST`  
+> Request payload: `ScheduleDeliveryRequest`  
+
+This would schedule a new delivery. The closest avaiable courier is picked and assigned to carry out the delivery (at the momeent, this logic is not implemented; instead a courier is picked at random).
+
+### 2. Get delivery info
+> Endpoint: `/delivery/<deliveryId>`  
+> Method: `GET`  
+
+Retrieves the details of the delivery with the provided ID. 
+
+When a delivery is scheduled, it will initially be in the `READY_FOR_PICKUP` state. The state of a delivery can be advanced to each state using the three endpoints defined.
+* To `PICKED_UP`: `delivery/<deliveryId>/update/pickedUp`
+* To `DELIVERED`: `delivery/<deliveryId>/update/delivered`
+
+In each of the above scenarios, the relevant timestamps are also updated in the database and the corresponding state of the `Order` in the `Order Service` is also changed.
+
+### Data storage and retrieval
+The delivery service has it's own MySQL database for storing relevant accounting data. The endpoints access the `Order Service` to retrieve relevant data and update order statuses. Since this service accesses data from the other services it is required to configure these endpoints and make REST API calls whenever necessary.
+
+### Running the module
+1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `delivery` directory.
+2. Configure the database connection properties as well as the endpoint configurations in the `Config.toml` file in the `delivery` directory. 
+3. To run the consumer service, simply navigate to the `delivery` directory and execute `bal run` in the terminal. 

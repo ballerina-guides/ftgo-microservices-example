@@ -1,3 +1,19 @@
+// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/sql;
 import ballerinax/mysql;
 import ballerina/time;
@@ -57,15 +73,15 @@ type MenuItem record {|
     decimal price;
 |};
 
-configurable string USER = ?;   
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
-configurable string ORDER_ENDPOINT = ?;
+configurable string user = ?;   
+configurable string password = ?;
+configurable string host = ?;
+configurable int port = ?;
+configurable string database = ?;
+configurable string orderEndpoint = ?;
 
-final mysql:Client dbClient = check new(host=HOST, user=USER, password=PASSWORD, port=PORT, database=DATABASE);
-final http:Client orderEndpoint = check new(ORDER_ENDPOINT);
+final mysql:Client dbClient = check new(host = host, user = user, password = password, port = port, database = database);
+final http:Client orderClient = check new(orderEndpoint);
 
 # Schedules a delivery
 #
@@ -154,7 +170,7 @@ isolated function updateDelivery(int id, DeliveryState newStatus) returns Delive
 # + orderId - The ID of the order for which the detailes are required
 # + return - The details of the order if the retrieval was successful. An error if unsuccessful
 isolated function getOrderDetails(int orderId) returns Order|error {
-    Order 'order = check orderEndpoint->get(orderId.toString());
+    Order 'order = check orderClient->get(orderId.toString());
     OrderItem[] orderItems = [];
 
     foreach OrderItem orderItem in 'order.orderItems {
@@ -176,6 +192,6 @@ isolated function getOrderDetails(int orderId) returns Order|error {
 }
 
 isolated function updateOrderStatus(Delivery delivery, DeliveryState newStatus) returns error? {
-    _ = check orderEndpoint->put(delivery.'order.id.toString() + "/updateStatus/" + newStatus.toString(), message = (), targetType = json);
+    _ = check orderClient->put(delivery.'order.id.toString() + "/updateStatus/" + newStatus.toString(), message = (), targetType = json);
     return ();
 }

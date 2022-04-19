@@ -1,8 +1,8 @@
 [package]
-org = "ballerina_guides"
-name = "ftgo_restaurant"
+org = "ftgo"
+name = "restaurant"
 version = "1.0.0"
-authors = ["WSO2"]  
+authors = ["WSO2"]
 distribution = "2201.0.0"
 
 [build-options]

@@ -1,11 +1,11 @@
-HOST="localhost"
-USER="root"
-PASSWORD="Test123#"
-PORT=3305
-DATABASE="Orders"
+host = "localhost"
+user = "root"
+password = "Test123#"
+port = 3305
+database = "Orders"
 
-CONSUMER_ENDPOINT = "http://localhost:8080/consumer/"
-RESTAURANT_ENDPOINT = "http://localhost:8081/restaurant/"
-MENU_ITEM_ENDPOINT = "http://localhost:8081/menuItem/"
-ACCOUNTING_ENDPOINT = "http://localhost:8083/"
-DELIVERY_ENDPOINT = "http://localhost:8084/delivery/"
+consumerEndpoint = "http://localhost:8080/consumer/"
+restaurantEndpoint = "http://localhost:8081/restaurant/"
+menuItemEndpoint = "http://localhost:8081/menuItem/"
+accountingEndpoint = "http://localhost:8083/"
+deliveryEndpoint = "http://localhost:8084/delivery/"

@@ -1,7 +1,8 @@
-HOST="localhost"
-USER="root"
-PASSWORD="Test123#"
-PORT=3305
-DATABASE="RestaurantTest"
+host = "localhost"
+user = "root"
+password = "Test123#"
+port = 3305
+database = "RestaurantTest"
 
-ORDER_ENDPOINT = "http://localhost:8082/order/"
+restaurantEndpoint = "http://localhost:8081/restaurant/"
+orderEndpoint = "http://localhost:8082/order/"

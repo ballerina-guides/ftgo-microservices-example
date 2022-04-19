@@ -1,3 +1,19 @@
+// Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/http;
 import ballerina/log;
 import ballerina/sql;
@@ -15,7 +31,7 @@ type ChargeRequest record {|
 # Response when a consumer is successfully charged
 type ConsumerCharged record {|
     *http:Ok;
-    # The deatils of the generated bill along with the relevant HTTP links
+    # The details of the generated bill along with the relevant HTTP links
     record {|
         *Bill;
         *http:Links;
@@ -25,7 +41,7 @@ type ConsumerCharged record {|
 # Response when a bill is successfully retrieved
 type BillView record {|
     *http:Ok;
-    # The deatils of the generated bill along with the relevant HTTP links
+    # The details of the generated bill along with the relevant HTTP links
     record {|
         *Bill;
         *http:Links;
@@ -59,7 +75,6 @@ service on new http:Listener(8083) {
     # + return - `ConsumerCharged` if the charge was successfully initiated.
     #            `InternalError` if an unexpected error occurs
     isolated resource function post charge(@http:Payload ChargeRequest request) returns ConsumerCharged|InternalError {
-        log:printInfo("Charge request", request = request);
         do {
             Bill generatedBill = check createBill(request.consumerId, request.orderId, request.orderAmount);
             check chargeConsumer(request.consumerId, request.orderAmount);
@@ -71,7 +86,7 @@ service on new http:Listener(8083) {
                 } 
             };
         } on fail error e {
-            log:printError(e.message(), e, e.stackTrace());
+            log:printError("Error in processing charge request", e, e.stackTrace());
             return <InternalError>{ body: { message: e.message() }};
         }
     }
@@ -92,7 +107,7 @@ service on new http:Listener(8083) {
                 } 
             };
         } on fail error e {
-            log:printError(e.message(), e, e.stackTrace());
+            log:printError("Error in retrieving bill.", e, e.stackTrace());
             if e is sql:NoRowsError {
                 return <BillNotFound>{};
             }
