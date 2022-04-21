@@ -1,0 +1,11 @@
+host = "localhost"
+user = "root"
+password = "Test123#"
+port = 3305
+database = "Orders"
+
+consumerEndpoint = "http://localhost:8080/consumer/"
+restaurantEndpoint = "http://localhost:8081/restaurant/"
+menuItemEndpoint = "http://localhost:8081/menuItem/"
+accountingEndpoint = "http://localhost:8083/"
+deliveryEndpoint = "http://localhost:8084/delivery/"

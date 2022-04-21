@@ -1,0 +1,14 @@
+[package]
+org = "ftgo"
+name = "database_init"
+version = "1.0.0"
+authors = ["WSO2"]
+distribution = "2201.0.0"
+
+[build-options]
+observabilityIncluded = true
+
+[[platform.java11.dependency]]
+groupId = "mysql"
+artifactId = "mysql-connector-java"
+version = "8.0.26"

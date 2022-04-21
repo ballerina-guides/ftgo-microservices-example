@@ -1,0 +1,7 @@
+host = "localhost"
+user = "root"
+password = "Test123#"
+port = 3305
+database = "Restaurant"
+
+orderEndpoint = "http://localhost:8082/order/"
