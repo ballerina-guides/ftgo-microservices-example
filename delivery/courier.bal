@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/sql;
+import ballerinax/mysql.driver as _;
 
 # Represents a courier
 type Courier record {|

@@ -18,6 +18,7 @@ import ballerina/sql;
 import ballerinax/mysql;
 import ballerina/time;
 import ballerina/http;
+import ballerinax/mysql.driver as _;
 
 enum DeliveryState {
     READY_FOR_PICKUP = "READY_FOR_PICKUP",

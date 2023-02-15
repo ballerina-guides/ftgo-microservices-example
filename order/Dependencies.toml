@@ -374,6 +374,14 @@ modules = [
 ]
 
 [[package]]
+org = "ballerinax"
+name = "mysql.driver"
+version = "1.4.1"
+modules = [
+	{org = "ballerinax", packageName = "mysql.driver", moduleName = "mysql.driver"}
+]
+
+[[package]]
 org = "ftgo"
 name = "order"
 version = "1.0.0"
@@ -384,7 +392,8 @@ dependencies = [
 	{org = "ballerina", name = "time"},
 	{org = "ballerinai", name = "observe"},
 	{org = "ballerinai", name = "transaction"},
-	{org = "ballerinax", name = "mysql"}
+	{org = "ballerinax", name = "mysql"},
+	{org = "ballerinax", name = "mysql.driver"}
 ]
 modules = [
 	{org = "ftgo", packageName = "order", moduleName = "order"}
