@@ -74,5 +74,3 @@ function setExternalAPICalls() returns error? {
 function mockNilReturnForUpdateOrderStatus(Delivery delivery, DeliveryState newStatus) returns error? {
     return ();
 }
-
-
