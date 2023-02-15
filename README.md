@@ -129,7 +129,7 @@ The restaurant service has its own MySQL database for storing relevant restauran
 ### Running the module
 1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `restaurant` directory.
 2. Configure the database connection properties as well as the order endpoint in the `Config.toml` file in the `restaurant` directory. 
-3. To run the consumer service, navigate to the `restaurant` directory and execute `bal run` in the terminal. 
+3. To run the restaurant service, navigate to the `restaurant` directory and execute `bal run` in the terminal. 
 
 ## Order service
 The order service handles orders placed by a consumer of a restaurant. This service is central to this example. This service provides 4 endpoints to perform basic CRUD functionalities with orders.
@@ -176,7 +176,7 @@ The order service has its own MySQL database for storing relevant order data. Si
 ### Running the module
 1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `order` directory.
 2. Configure the database connection properties as well as the endpoint configurations in the `Config.toml` file in the `order` directory. 
-3. To run the consumer service, navigate to the `order` directory and execute `bal run` in the terminal. 
+3. To run the order service, navigate to the `order` directory and execute `bal run` in the terminal. 
 
 ## Accounting service
 The `accounting` service is used to charge payments to the consumer and to view the bills generated.
@@ -211,7 +211,7 @@ The accounting service has it's own MySQL database for storing relevant accounti
 ### Running the module
 1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `accounting` directory.
 2. Configure the database connection properties as well as the endpoint configurations in the `Config.toml` file in the `accounting` directory. 
-3. To run the consumer service, navigate to the `accounting` directory and execute `bal run` in the terminal. 
+3. To run the accounting service, navigate to the `accounting` directory and execute `bal run` in the terminal. 
 
 ## Delivery Service
 The delivery service is responsible for the management of couriers and delivery of orders from the restaurant to the consumer.
@@ -273,4 +273,4 @@ The delivery service has it's own MySQL database for storing relevant accounting
 ### Running the module
 1. Set up a MySQL database and create the relevant tables using the queries in the `init.sql` file in the `delivery` directory.
 2. Configure the database connection properties as well as the endpoint configurations in the `Config.toml` file in the `delivery` directory. 
-3. To run the consumer service, navigate to the `delivery` directory and execute `bal run` in the terminal. 
+3. To run the delivery service, navigate to the `delivery` directory and execute `bal run` in the terminal. 
