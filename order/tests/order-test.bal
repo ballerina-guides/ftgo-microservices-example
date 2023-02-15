@@ -49,7 +49,7 @@ function createOrderTest1() returns error? {
         *http:Links;
     |} returnData = check (check response.getJsonPayload()).cloneWithType();
     validateOrder(createOrderPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -79,7 +79,7 @@ function createOrderTest2() returns error? {
         *http:Links;
     |} returnData = check (check response.getJsonPayload()).cloneWithType();
     validateOrder(createOrderPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -142,7 +142,7 @@ function getOrderTest() returns error? {
         *Order;
         *http:Links;
     |} returnData = check (check response.getJsonPayload()).cloneWithType();
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {

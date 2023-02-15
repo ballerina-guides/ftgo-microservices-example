@@ -20,15 +20,16 @@ import ballerinax/mysql;
 @test:BeforeSuite
 function databaseInit() returns error? {
     mysql:Client dbClient = check new(host = host, port = port, user = user, password = password);
-    _ = check dbClient->execute(`CREATE DATABASE IF NOT EXISTS Delivery;`);
+    _ = check dbClient->execute(`DROP DATABASE IF EXISTS Delivery;`);
+    _ = check dbClient->execute(`CREATE DATABASE Delivery;`);
     _ = check dbClient->execute(`
-        CREATE TABLE IF NOT EXISTS Delivery.Couriers (
+        CREATE TABLE Delivery.Couriers (
             id      INTEGER     AUTO_INCREMENT PRIMARY KEY,
             name    VARCHAR(50) NOT NULL
         )
     `);
     _ = check dbClient->execute(`
-        CREATE TABLE IF NOT EXISTS Delivery.Deliveries (
+        CREATE TABLE Delivery.Deliveries (
             id              INTEGER         AUTO_INCREMENT PRIMARY KEY,
             orderId         INTEGER         NOT NULL,
             courierId       INTEGER         NOT NULL,
@@ -67,6 +68,11 @@ function setExternalAPICalls() returns error? {
     });
 
     test:when(mockGetOrderDetails).thenReturn(error("Order not found."));
-    test:when(mockUpdateOrderStatus).thenReturn(());
+    test:when(mockUpdateOrderStatus).call("mockNilReturnForUpdateOrderStatus");
 }
+
+function mockNilReturnForUpdateOrderStatus(Delivery delivery, DeliveryState newStatus) returns error? {
+    return ();
+}
+
 

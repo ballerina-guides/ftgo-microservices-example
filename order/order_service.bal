@@ -155,7 +155,7 @@ service /'order on new http:Listener(8082) {
                     },
                     body: {
                         ...generatedOrder,
-                        links: getOrderLinks(generatedOrder.id)
+                        _links: getOrderLinks(generatedOrder.id)
                     }
                 };
             }
@@ -176,7 +176,7 @@ service /'order on new http:Listener(8082) {
             return <OrderView>{ 
                 body: {
                     ...'order,
-                    links: getOrderLinks(id)
+                    _links: getOrderLinks(id)
                 }
             };
         } on fail error e {
@@ -199,7 +199,7 @@ service /'order on new http:Listener(8082) {
             return <OrderItemCreated>{ 
                 body: {
                     ...generatedOrderItem,
-                    links: getOrderItemLinks(generatedOrderItem.id, orderId)
+                    _links: getOrderItemLinks(generatedOrderItem.id, orderId)
                 } 
             };
         } on fail error e {
@@ -274,7 +274,7 @@ service /'order on new http:Listener(8082) {
             return <OrderUpdated> { 
                 body: {
                     ...'order,
-                    links: getOrderLinks(id) 
+                    _links: getOrderLinks(id) 
                 }
             };
         } on fail error e {
@@ -290,24 +290,24 @@ service /'order on new http:Listener(8082) {
 #
 # + orderId - The ID of the order
 # + return - An array of links
-isolated function getOrderLinks(int orderId) returns http:Link[] {
-    return [
-        {
+isolated function getOrderLinks(int orderId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/order/" + orderId.toString(),
             methods: [http:GET]
         },
-        {
+        "update": {
             rel: "update",
             href: "/order/" + orderId.toString(),
             methods: [http:PUT]
         },
-        {
+        "delete": {
             rel: "delete",
             href: "/order/" + orderId.toString(),
             methods: [http:DELETE]
         }
-    ];
+    };
 }
 
 # Obtain the HTTP links related to a given order item
@@ -315,27 +315,27 @@ isolated function getOrderLinks(int orderId) returns http:Link[] {
 # + orderItemId - The ID of the order item  
 # + parentOrderId - The ID of the order to which the order item belong
 # + return - An array of links
-isolated function getOrderItemLinks(int orderItemId, int parentOrderId) returns http:Link[] {
-    return [
-        {
+isolated function getOrderItemLinks(int orderItemId, int parentOrderId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/order/" + parentOrderId.toString() + "/item/" + orderItemId.toString(),
             methods: [http:GET]
         },
-        {
+        "update": {
             rel: "update",
             href: "/order/" + parentOrderId.toString() + "/item/" + orderItemId.toString(),
             methods: [http:PUT]
         },
-        {
+        "delete": {
             rel: "delete",
             href: "/order/" + parentOrderId.toString() + "/item/" + orderItemId.toString(),
             methods: [http:DELETE]
         },
-        {
+        "parent order": {
             rel: "parent order",
             href: "/order/" + parentOrderId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
 }

@@ -122,9 +122,9 @@ isolated function getDelivery(int id) returns Delivery|error {
         int orderId;
         int courierId;
         string pickUpAddress;
-        time:Civil pickUpTime;
+        time:Civil? pickUpTime;
         string deliveryAddress;
-        time:Civil deliveryTime;
+        time:Civil? deliveryTime;
         string status;
     |} deliveryRow = check dbClient->queryRow(`
         SELECT id, orderId, courierId, pickUpAddress, pickUpTime, deliveryAddress, deliveryTime, status 
@@ -167,7 +167,7 @@ isolated function updateDelivery(int id, DeliveryState newStatus) returns Delive
 
 # Retrieves the details of an order
 #
-# + orderId - The ID of the order for which the detailes are required
+# + orderId - The ID of the order for which the details are required
 # + return - The details of the order if the retrieval was successful. An error if unsuccessful
 isolated function getOrderDetails(int orderId) returns Order|error {
     Order 'order = check orderClient->get(orderId.toString());

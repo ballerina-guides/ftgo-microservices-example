@@ -48,7 +48,7 @@ function chargeTest() returns error? {
     test:assertEquals(returnData.'order.orderItems.length(), 2);
     test:assertEquals(returnData.consumer.id, requestPayload.consumerId);
     test:assertEquals(returnData.orderAmount, requestPayload.orderAmount);
-    test:assertEquals(returnData.links.length(), 1);
+    test:assertEquals(returnData._links.length(), 1);
 }
 
 @test:Config {
@@ -104,7 +104,7 @@ function getBillTest() returns error? {
     test:assertEquals(returnData2.consumer.id, requestPayload.consumerId);
     test:assertEquals(returnData2.'order.id, requestPayload.orderId);
     test:assertEquals(returnData2.orderAmount, requestPayload.orderAmount);
-    test:assertEquals(returnData2.links.length(), 1);
+    test:assertEquals(returnData2._links.length(), 1);
 }
 
 @test:Config {

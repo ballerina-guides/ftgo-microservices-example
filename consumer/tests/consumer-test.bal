@@ -46,7 +46,7 @@ http:Client consumerClient = check new("http://localhost:8080/consumer/");
     test:assertEquals(returnData.name, "Test Name");
     test:assertEquals(returnData.address, "Test address");
     test:assertEquals(returnData.email, "test@email.com");
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -67,7 +67,7 @@ function createConsumerTest2() returns error? {
     test:assertEquals(returnData.name, "Test Name");
     test:assertEquals(returnData.address, "Test address");
     test:assertEquals(returnData.email, "test@email.com");
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -102,7 +102,7 @@ function getConsumerTest() returns error? {
     test:assertEquals(returnData.name, "Test Name2");
     test:assertEquals(returnData.address, "Test address2");
     test:assertEquals(returnData.email, "test2@email.com");
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -186,7 +186,7 @@ function updateConsumerTest() returns error? {
     test:assertEquals(returnData.name, "Test Name3");
     test:assertEquals(returnData.address, "Test address3");
     test:assertEquals(returnData.email, "test3@email.com");
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {

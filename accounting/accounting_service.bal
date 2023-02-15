@@ -82,7 +82,7 @@ service on new http:Listener(8083) {
             return <ConsumerCharged>{ 
                 body:{
                     ...generatedBill,
-                    links: getLinks(generatedBill.id)
+                    _links: getLinks(generatedBill.id)
                 } 
             };
         } on fail error e {
@@ -103,7 +103,7 @@ service on new http:Listener(8083) {
             return <BillView>{ 
                 body:{
                     ...bill,
-                    links: getLinks(id)
+                    _links: getLinks(id)
                 } 
             };
         } on fail error e {
@@ -121,13 +121,13 @@ service on new http:Listener(8083) {
 #
 # + billId - The ID of the bill
 # + return - An array of links
-isolated function getLinks(int billId) returns http:Link[] {
-    return [
-        {
+isolated function getLinks(int billId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/bill/" + billId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
 }
 
