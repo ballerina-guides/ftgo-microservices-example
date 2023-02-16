@@ -114,7 +114,7 @@ service  on new http:Listener(8084) {
                 },
                 body: {
                     ...generatedCourier,
-                    links: getCourierLinks(generatedCourier.id)
+                    _links: getCourierLinks(generatedCourier.id)
                 }
             };
         } on fail error e {
@@ -135,7 +135,7 @@ service  on new http:Listener(8084) {
             return <CourierView>{ 
                 body: {
                     ...courier,
-                    links: getCourierLinks(courier.id)
+                    _links: getCourierLinks(courier.id)
                 }
             };
         } on fail error e {
@@ -157,7 +157,7 @@ service  on new http:Listener(8084) {
             return <DeliveryScheduled>{
                 body: {
                     ...delivery,
-                    links: getDeliveryLinks(delivery.id)
+                    _links: getDeliveryLinks(delivery.id)
                 }
             };
         } on fail error e {
@@ -178,7 +178,7 @@ service  on new http:Listener(8084) {
             return <DeliveryView>{
                 body: {
                     ...delivery,
-                    links: getDeliveryLinks(delivery.id)
+                    _links: getDeliveryLinks(delivery.id)
                 }
             };
         } on fail error e {
@@ -224,7 +224,7 @@ isolated function changeDeliveryStatus(int id, DeliveryState newStatus) returns 
         return <DeliveryView>{
             body: {
                 ...delivery,
-                links: getDeliveryLinks(delivery.id)
+                _links: getDeliveryLinks(delivery.id)
             }
         };
     } on fail error e {
@@ -239,26 +239,26 @@ isolated function changeDeliveryStatus(int id, DeliveryState newStatus) returns 
 #
 # + courierId - The ID of the courier
 # + return - An array of links
-isolated function getCourierLinks(int courierId) returns http:Link[] {
-    return [
-        {
+isolated function getCourierLinks(int courierId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/courier/" + courierId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
 }
 
 # Returns the HTTP links related to a given delivery
 #
 # + deliveryId - The ID of the courier
 # + return - An array of links
-isolated function getDeliveryLinks(int deliveryId) returns http:Link[] {
-    return [
-        {
+isolated function getDeliveryLinks(int deliveryId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/delivery/" + deliveryId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
 }

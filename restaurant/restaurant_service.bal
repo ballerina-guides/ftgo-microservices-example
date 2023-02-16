@@ -309,7 +309,7 @@ service on new http:Listener(8081) {
                     },
                     body: {
                         ...generatedRestaurant,
-                        links: getRestaurantLinks(generatedRestaurant.id)
+                        _links: getRestaurantLinks(generatedRestaurant.id)
                     }
                 };
             }
@@ -342,7 +342,7 @@ service on new http:Listener(8081) {
                     },
                     body: {
                         ...generatedMenu,
-                        links: getMenuLinks(generatedMenu.id, restaurantId)
+                        _links: getMenuLinks(generatedMenu.id, restaurantId)
                     }
                 };
             }
@@ -367,7 +367,7 @@ service on new http:Listener(8081) {
                 },
                 body: {
                     ...generatedMenuItem,
-                    links: getMenuItemLinks(generatedMenuItem.id, menuId, restaurantId)
+                    _links: getMenuItemLinks(generatedMenuItem.id, menuId, restaurantId)
                 }
             };
         } on fail error e {
@@ -387,7 +387,7 @@ service on new http:Listener(8081) {
             return <RestaurantView>{ 
                 body: {
                     ...restaurant,
-                    links: getRestaurantLinks(restaurant.id)
+                    _links: getRestaurantLinks(restaurant.id)
                 }
             };
         } on fail error e {
@@ -411,7 +411,7 @@ service on new http:Listener(8081) {
             return <MenuView>{ 
                 body: {
                     ...menu,
-                    links: getMenuLinks(menu.id, restaurantId)
+                    _links: getMenuLinks(menu.id, restaurantId)
                 }
             };
         } on fail error e {
@@ -436,7 +436,7 @@ service on new http:Listener(8081) {
             return <MenuItemView>{ 
                 body: {
                     ...menuItem,
-                    links: getMenuItemLinks(menuItem.id, menuId, restaurantId)
+                    _links: getMenuItemLinks(menuItem.id, menuId, restaurantId)
                 }
             };
         } on fail error e {
@@ -461,7 +461,7 @@ service on new http:Listener(8081) {
             return <MenuItemView>{ 
                 body: {
                     ...menuItem,
-                    links: getMenuItemLinks(menuItem.id, parentMenu.id, parentRestaurant.id)
+                    _links: getMenuItemLinks(menuItem.id, parentMenu.id, parentRestaurant.id)
                 }
             };
         } on fail error e {
@@ -542,7 +542,7 @@ service on new http:Listener(8081) {
             return <RestaurantUpdated>{ 
                 body: { 
                     ...updatedRestaurant,
-                    links: getRestaurantLinks(updatedRestaurant.id)
+                    _links: getRestaurantLinks(updatedRestaurant.id)
                 }
             };
         } on fail error e {
@@ -567,7 +567,7 @@ service on new http:Listener(8081) {
             return <MenuUpdated>{ 
                 body: {
                     ...updatedMenu,
-                    links: getMenuLinks(updatedMenu.id, restaurantId)
+                    _links: getMenuLinks(updatedMenu.id, restaurantId)
                 }
             };
         } on fail error e {
@@ -593,7 +593,7 @@ service on new http:Listener(8081) {
             return <MenuItemUpdated>{ 
                 body: {
                     ...updatedMenuItem,
-                    links: getMenuItemLinks(updatedMenuItem.id, menuId, restaurantId)
+                    _links: getMenuItemLinks(updatedMenuItem.id, menuId, restaurantId)
                 }
             };
         } on fail error e {
@@ -616,7 +616,7 @@ service on new http:Listener(8081) {
             return <TicketCreated>{ 
                 body: {
                     ...generatedTicket,
-                    links: getTicketLinks(generatedTicket.id)
+                    _links: getTicketLinks(restaurantId, generatedTicket.id)
                 }
             };
         } on fail error e {
@@ -638,7 +638,7 @@ service on new http:Listener(8081) {
             return <TicketView>{ 
                 body: {
                     ...ticket,
-                    links: getTicketLinks(id)
+                    _links: getTicketLinks(restaurantId, id)
                 }
             };
         } on fail error e {
@@ -662,7 +662,7 @@ service on new http:Listener(8081) {
             return <TicketUpdated>{
                 body: {
                     ...updatedTicket,
-                    links: getTicketLinks(id)
+                    _links: getTicketLinks(restaurantId, id)
                 }
             };
         } on fail error e {
@@ -687,7 +687,7 @@ service on new http:Listener(8081) {
             return <TicketUpdated>{
                 body: {
                     ...updatedTicket,
-                    links: getTicketLinks(id)
+                    _links: getTicketLinks(restaurantId, id)
                 }
             };
         } on fail error e {
@@ -711,7 +711,7 @@ service on new http:Listener(8081) {
             return <TicketUpdated>{
                 body: {
                     ...updatedTicket,
-                    links: getTicketLinks(id)
+                    _links: getTicketLinks(restaurantId, id)
                 }
             };
         } on fail error e {
@@ -728,24 +728,24 @@ service on new http:Listener(8081) {
 #
 # + restaurantId - The ID of the restaurant
 # + return - An array of links
-isolated function getRestaurantLinks(int restaurantId) returns http:Link[] {
-    return [
-        {
+isolated function getRestaurantLinks(int restaurantId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/restaurant/" + restaurantId.toString(),
             methods: [http:GET]
         },
-        {
+        "update": {
             rel: "update",
             href: "/restaurant/" + restaurantId.toString(),
             methods: [http:PUT]
         },
-        {
+        "delete": {
             rel: "delete",
             href: "/restaurant/" + restaurantId.toString(),
             methods: [http:DELETE]
         }
-    ];
+    };
 }
 
 # Returns the HTTP links related to a given menu
@@ -753,29 +753,29 @@ isolated function getRestaurantLinks(int restaurantId) returns http:Link[] {
 # + menuId - THe ID of the menu  
 # + parentRestaurantId - The ID of the restaurant to which the menu belongs
 # + return - An array of links
-isolated function getMenuLinks(int menuId, int parentRestaurantId) returns http:Link[] {
-    return [
-        {
+isolated function getMenuLinks(int menuId, int parentRestaurantId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
             href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + menuId.toString(),
             methods: [http:GET]
         },
-        {
+        "update": {
             rel: "update",
             href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + menuId.toString(),
             methods: [http:PUT]
         },
-        {
+        "delete": {
             rel: "delete",
             href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + menuId.toString(),
             methods: [http:DELETE]
         },
-        {
+        "parent restaurant": {
             rel: "parent restaurant",
             href: "/restaurant/" + parentRestaurantId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
 }
 
 # Returns the HTTP links related to a given menu item
@@ -784,46 +784,63 @@ isolated function getMenuLinks(int menuId, int parentRestaurantId) returns http:
 # + parentMenuId - The ID of the menu to which the menu item belongs  
 # + parentRestaurantId - The ID of the restaurant to which the menu item belongs
 # + return - An array of links
-isolated function getMenuItemLinks(int menuItemId, int parentMenuId, int parentRestaurantId) returns http:Link[] {
-    return [
-        {
+isolated function getMenuItemLinks(int menuItemId, int parentMenuId, int parentRestaurantId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
-            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/item/" + menuItemId.toString(),
+            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/menu-item/" + menuItemId.toString(),
             methods: [http:GET]
         },
-        {
+        "update": {
             rel: "update",
-            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/item/" + menuItemId.toString(),
+            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/menu-item/" + menuItemId.toString(),
             methods: [http:PUT]
         },
-        {
+        "delete": {
             rel: "delete",
-            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/item/" + menuItemId.toString(),
+            href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString() + "/menu-item/" + menuItemId.toString(),
             methods: [http:DELETE]
         },
-        {
+        "parent menu": {
             rel: "parent menu",
             href: "/restaurant/" + parentRestaurantId.toString() + "/menu/" + parentMenuId.toString(),
             methods: [http:GET]
         },
-        {
+        "parent restaurant": {
             rel: "parent restaurant",
             href: "/restaurant/" + parentRestaurantId.toString(),
             methods: [http:GET]
         }
-    ];
+    };
+    
 }
 
 # Returns the HTTP links related to a given ticket
 #
+# + restaurantId - The ID of the restaurant to which the ticket belongs to
 # + ticketId - The ID of the ticket
 # + return - An array of links
-isolated function getTicketLinks(int ticketId) returns http:Link[] {
-    return [
-        {
+isolated function getTicketLinks(int restaurantId, int ticketId) returns map<http:Link> {
+    return {
+        "view": {
             rel: "view",
-            href: "/ticket/" + ticketId.toString(),
+            href: "/restaurant/" + restaurantId.toString() + "/ticket/" + ticketId.toString(),
             methods: [http:GET]
+        },
+        "mark preparing": {
+            rel: "mark preparing",
+            href: "/restaurant/" + restaurantId.toString() + "/ticket/" + ticketId.toString() + "/mark/preparing",
+            methods: [http:PUT]
+        },
+        "mark ready": {
+            rel: "mark ready",
+            href: "/restaurant/" + restaurantId.toString() + "/ticket/" + ticketId.toString() + "/mark/ready",
+            methods: [http:PUT]
+        },
+        "mark picked up": {
+            rel: "mark picked up",
+            href: "/restaurant/" + restaurantId.toString() + "/ticket/" + ticketId.toString() + "/mark/pickedUp",
+            methods: [http:PUT]
         }
-    ];
+    };
 }

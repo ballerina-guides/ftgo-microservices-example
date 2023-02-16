@@ -116,7 +116,7 @@ service /consumer on new http:Listener(8080) {
                 },
                 body: {
                     ...generatedConsumer,
-                    links: getLinks(generatedConsumer.id)
+                    _links: getLinks(generatedConsumer.id)
                 }
             };
         } on fail error e {
@@ -136,7 +136,7 @@ service /consumer on new http:Listener(8080) {
             return <ConsumerView>{ 
                 body: {
                     ...consumer,
-                    links: getLinks(consumer.id)
+                    _links: getLinks(consumer.id)
                 }
             };
         } on fail error e {
@@ -177,7 +177,7 @@ service /consumer on new http:Listener(8080) {
             return <ConsumerUpdated>{ 
                 body: {
                     ...updatedConsumer,
-                    links: getLinks(updatedConsumer.id)
+                    _links: getLinks(updatedConsumer.id)
                 }
             };
         } on fail error e {
@@ -205,22 +205,26 @@ service /consumer on new http:Listener(8080) {
 #
 # + consumerId - The ID of the consumer
 # + return - An array of links
-isolated function getLinks(int consumerId) returns http:Link[] {
-    return [
-        {
-            rel: "view",
-            href: "/consumer/" + consumerId.toString(),
-            methods: [http:GET]
-        },
-        {
-            rel: "update",
-            href: "/consumer/" + consumerId.toString(),
-            methods: [http:PUT]
-        },
-        {
-            rel: "delete",
-            href: "/consumer/" + consumerId.toString(),
-            methods: [http:DELETE]
-        }
-    ];
+isolated function getLinks(int consumerId) returns map<http:Link> {
+    map<http:Link> links = {};
+
+    links["view"] = {
+        rel: "view",
+        href: "/consumer/" + consumerId.toString(),
+        methods: [http:GET]
+    };
+
+    links["update"] = {
+        rel: "update",
+        href: "/consumer/" + consumerId.toString(),
+        methods: [http:PUT]
+    };
+
+    links["delete"] = {
+        rel: "delete",
+        href: "/consumer/" + consumerId.toString(),
+        methods: [http:DELETE]
+    };
+
+    return links;
 }

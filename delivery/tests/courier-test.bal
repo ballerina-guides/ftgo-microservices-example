@@ -38,7 +38,7 @@ function createCourierTest() returns error? {
 
     CourierCreatedRecord returnData = check (check response.getJsonPayload()).cloneWithType();
     test:assertEquals(returnData.name, requestPayload.name);
-    test:assertEquals(returnData.links.length(), 1);
+    test:assertEquals(returnData._links.length(), 1);
 }
 
 @test:Config {
@@ -73,7 +73,7 @@ function getCourierTest() returns error? {
 
     returnData = check (check response.getJsonPayload()).cloneWithType();
     test:assertEquals(returnData.name, requestPayload.name);
-    test:assertEquals(returnData.links.length(), 1);
+    test:assertEquals(returnData._links.length(), 1);
 }
 
 @test:Config {

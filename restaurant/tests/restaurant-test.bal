@@ -80,7 +80,7 @@ function createRestaurantTest1() returns error? {
 
     RestaurantCreatedRecord returnData = check (check response.getJsonPayload()).cloneWithType();
     validateRestaurant(createRestaurantPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -99,7 +99,7 @@ function createRestaurantTest2() returns error? {
 
     RestaurantCreatedRecord returnData = check (check response.getJsonPayload()).cloneWithType();
     validateRestaurant(createRestaurantPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -130,7 +130,7 @@ function createRestaurantTest3() returns error? {
 
     RestaurantCreatedRecord returnData = check (check response.getJsonPayload()).cloneWithType();
     validateRestaurant(createRestaurantPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -197,7 +197,7 @@ function getRestaurantTest() returns error? {
 
     RestaurantViewRecord returnData = check (check response.getJsonPayload()).cloneWithType();
     validateRestaurant(createRestaurantPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {
@@ -354,7 +354,7 @@ function updateRestaurantTest() returns error? {
     createRestaurantPayload.name = updateRestaurantPayload.name;
     createRestaurantPayload.address = updateRestaurantPayload.address;
     validateRestaurant(createRestaurantPayload, returnData);
-    test:assertEquals(returnData.links.length(), 3);
+    test:assertEquals(returnData._links.length(), 3);
 }
 
 @test:Config {

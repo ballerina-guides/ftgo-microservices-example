@@ -56,7 +56,7 @@ test:MockFunction mockGetMenuItem = new();
 
 public client class MockConsumersEndpointClient {
 
-    remote function get(string path, map<string|string[]>? headers = (), http:TargetType targetType = http:Response) returns http:Response| http:PayloadType | http:ClientError {
+    remote function get(string path, map<string|string[]>? headers = (), http:TargetType targetType = http:Response) returns http:Response | http:ClientError {
         http:Response response = new;
         response.statusCode = 200;
         response.setJsonPayload({
